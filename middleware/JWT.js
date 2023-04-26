@@ -10,7 +10,7 @@ export const generateAccessToken = (user) => {
   );
 };
 
-export const verify = (req, res, next) => {
+export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader) {
     const token = authHeader.split(" ")[1];
@@ -27,8 +27,18 @@ export const verify = (req, res, next) => {
 };
 
 export const verifyTokenAndAuthorization = (req, res, next) => {
-  verify(req, res, () => {
+  verifyToken(req, res, () => {
     if (req.user.id === req.params.id || req.user.isAdmin) {
+      next();
+    } else {
+      res.status(403).json("You are not alowed to do that!");
+    }
+  });
+};
+
+export const verifyTokenAndAdmin = (req, res, next) => {
+  verifyToken(req, res, () => {
+    if (req.user.isAdmin) {
       next();
     } else {
       res.status(403).json("You are not alowed to do that!");

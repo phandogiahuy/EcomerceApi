@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
-
 import { User } from "../models/User.js";
 import { generateAccessToken } from "../middleware/JWT.js";
 
 class AuthController {
+  //register account
   async register(req, res) {
     try {
       //tạo mật khẩu mới
@@ -16,12 +16,13 @@ class AuthController {
         password: hashedPassword,
       });
       //save user vào database and response
-      const User = await newUser.save();
-      res.status(200).json(newUser);
+      const user = await newUser.save();
+      res.status(200).json(user);
     } catch (error) {
       return res.json(error);
     }
   }
+  //login account
   async login(req, res) {
     try {
       const user = await User.findOne({ email: req.body.email });
